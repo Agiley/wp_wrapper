@@ -7,10 +7,12 @@ module WpWrapper
       
         def configure_wordpress_seo(language = :sv)
           options                 =   {
-            "wpseo_titles[forcerewritetitle]"   =>  {:type   =>  :checkbox,   :checked   =>  true},
-            "wpseo_titles[title-home]"          =>  {:type   =>  :input,      :value     =>  '%%sitename%% %%page%%'},
-            "wpseo_titles[title-search]"        =>  {:type   =>  :input,      :value     =>  translate_pattern(:search, language)},
-            "wpseo_titles[title-404]"           =>  {:type   =>  :input,      :value     =>  translate_pattern(:not_found, language)},
+            "wpseo_titles[forcerewritetitle]"     =>  {:type   =>  :checkbox,   :checked   =>  true},
+            "wpseo_titles[title-home]"            =>  {:type   =>  :input,      :value     =>  '%%sitename%% %%page%%'},
+            "wpseo_titles[title-search]"          =>  {:type   =>  :input,      :value     =>  translate_pattern(:search, language)},
+            "wpseo_titles[title-404]"             =>  {:type   =>  :input,      :value     =>  translate_pattern(:not_found, language)},
+            "wpseo_titles[noindex-author-wpseo]"  =>  {:type   =>  :checkbox,   :checked   =>  true},
+            "wpseo_titles[disable-author]"        =>  {:type   =>  :checkbox,   :checked   =>  true},
           }
         
           standard_pattern        =   '%%title%% %%page%% %%sep%% %%sitename%%'
