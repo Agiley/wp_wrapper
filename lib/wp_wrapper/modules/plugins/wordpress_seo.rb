@@ -6,15 +6,58 @@ module WpWrapper
       module WordpressSeo
       
         def configure_wordpress_seo(language = :sv)
+          login unless logged_in?
+          
+          options   =   get_author_options
+          
+          options.merge!(get_taxonomy_options)
+          options.merge!(get_title_options(language))
+
+          url       =   "#{get_url(:admin)}/admin.php?page=wpseo_titles"
+        
+          page      =   self.mechanize_client.get_page(url)
+          form      =   self.mechanize_client.get_form(page, {:action => /wp-admin\/options\.php/i})
+        
+          if (form)
+            options.each do |key, values|
+              case values[:type]
+                when :input
+                  form[key] = values[:value]
+                when :checkbox
+                  form[key] = "on" if values[:checked]
+              end
+            end
+          
+            form.submit
+          end
+          
+        end
+        
+        def get_author_options
+          options                 =   {
+            "wpseo_titles[noindex-author-wpseo]"  =>  {:type   =>  :checkbox,   :checked   =>  true},
+            "wpseo_titles[disable-author]"        =>  {:type   =>  :checkbox,   :checked   =>  true},
+          }
+        end
+        
+        def get_taxonomy_options
+          options                 =   {
+            "wpseo_titles[noindex-tax-category]"    =>  {:type   =>  :checkbox,   :checked   =>  true},
+            "wpseo_titles[noindex-tax-post_tag]"    =>  {:type   =>  :checkbox,   :checked   =>  true},
+            "wpseo_titles[noindex-tax-post_format]" =>  {:type   =>  :checkbox,   :checked   =>  true}, 
+          }
+          
+          return options
+        end
+        
+        def get_title_options(language = :sv)
           options                 =   {
             "wpseo_titles[forcerewritetitle]"     =>  {:type   =>  :checkbox,   :checked   =>  true},
             "wpseo_titles[title-home]"            =>  {:type   =>  :input,      :value     =>  '%%sitename%% %%page%%'},
             "wpseo_titles[title-search]"          =>  {:type   =>  :input,      :value     =>  translate_pattern(:search, language)},
-            "wpseo_titles[title-404]"             =>  {:type   =>  :input,      :value     =>  translate_pattern(:not_found, language)},
-            "wpseo_titles[noindex-author-wpseo]"  =>  {:type   =>  :checkbox,   :checked   =>  true},
-            "wpseo_titles[disable-author]"        =>  {:type   =>  :checkbox,   :checked   =>  true},
+            "wpseo_titles[title-404]"             =>  {:type   =>  :input,      :value     =>  translate_pattern(:not_found, language)}
           }
-        
+          
           standard_pattern        =   '%%title%% %%page%% %%sep%% %%sitename%%'
           standard_term_pattern   =   translate_pattern(:term, language)
         
@@ -38,26 +81,8 @@ module WpWrapper
           
             options.merge!(type_options)
           end
-        
-          login unless logged_in?
-
-          url       =   "#{get_url(:admin)}/admin.php?page=wpseo_titles"
-        
-          page      =   self.mechanize_client.get_page(url)
-          form      =   self.mechanize_client.get_form(page, {:action => /wp-admin\/options\.php/i})
-        
-          if (form)
-            options.each do |key, values|
-              case values[:type]
-                when :input
-                  form[key] = values[:value]
-                when :checkbox
-                  form[key] = "on" if values[:checked]
-              end
-            end
           
-            form.submit
-          end
+          return options
         end
         
         def configure_wordpress_seo_sitemaps(not_included_post_types: [], not_included_taxonomies: [], disable_author_sitemap: true)
