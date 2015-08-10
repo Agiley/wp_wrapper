@@ -12,6 +12,7 @@ module WpWrapper
   require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/plugins/gocodes')
   require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/plugins/w3_total_cache')
   require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/plugins/wordpress_seo')
+  require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/plugins/tracking_code')
   
   require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/plugins')
   

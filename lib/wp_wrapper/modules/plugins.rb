@@ -5,6 +5,7 @@ module WpWrapper
       include ::WpWrapper::Modules::Plugins::Gocodes
       include ::WpWrapper::Modules::Plugins::W3TotalCache
       include ::WpWrapper::Modules::Plugins::WordpressSeo
+      include ::WpWrapper::Modules::Plugins::TrackingCode
       
       def manage_plugins(plugin_identifiers, action = :activate)
         plugin_identifiers        =   (plugin_identifiers.is_a?(Array)) ? plugin_identifiers : [plugin_identifiers.to_s]
