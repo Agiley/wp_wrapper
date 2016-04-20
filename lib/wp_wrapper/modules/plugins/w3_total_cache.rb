@@ -6,7 +6,7 @@ module WpWrapper
         def configure_w3_total_cache(caching_mechanism = :memcached, options = {})
           configure_general_settings(caching_mechanism, options)
           configure_page_cache
-          configure_minification
+          configure_minification(options.fetch(:minify, {}))
           configure_browser_cache
           activate_configuration
         end
@@ -33,7 +33,6 @@ module WpWrapper
           minify_options            =   {
             "minify.enabled"    =>    {:checked   =>  true,               :type   =>  :checkbox}, 
             "minify.engine"     =>    {:value     =>  caching_mechanism,  :type   =>  :select},
-            #"minify.auto"       =>    {:checked   =>  true,               :type   =>  :radiobutton}
           }
         
           caching_options.merge!(minify_options)
@@ -66,16 +65,26 @@ module WpWrapper
           return set_options_and_submit(url, form_identifier, options, button_identifier)
         end
       
-        def configure_minification
+        def configure_minification(options = {})
           url                       =   "admin.php?page=w3tc_minify"
           form_identifier           =   {:action => /admin\.php\?page=w3tc_minify/i, :index => 1}
           button_identifier         =   {:name => 'w3tc_save_options'}
+          
+          minify_html               =   options.fetch(:html, :enable).to_sym.eql?(:enable)
+          minify_inline_css         =   options.fetch(:inline_css, :enable).to_sym.eql?(:enable)
+          minify_inline_js          =   options.fetch(:inline_js, :enable).to_sym.eql?(:enable)
+
+          minify_js                 =   options.fetch(:js, :enable).to_sym.eql?(:enable)
+          minify_css                =   options.fetch(:css, :enable).to_sym.eql?(:enable)
         
           options                   =   {
-            "minify.html.enable"                          =>    {:checked   =>  true,   :type   =>  :checkbox},
-            "minify.html.inline.css"                      =>    {:checked   =>  true,   :type   =>  :checkbox},
-            "minify.html.inline.js"                       =>    {:checked   =>  true,   :type   =>  :checkbox},
-            "minify.auto.disable_filename_length_test"    =>    {:checked   =>  true,   :type   =>  :checkbox},
+            "minify.html.enable"                          =>    {:checked   =>  minify_html,          :type   =>  :checkbox},
+            "minify.html.inline.css"                      =>    {:checked   =>  minify_inline_css,    :type   =>  :checkbox},
+            "minify.html.inline.js"                       =>    {:checked   =>  minify_inline_js,     :type   =>  :checkbox},
+            "minify.auto.disable_filename_length_test"    =>    {:checked   =>  true,                 :type   =>  :checkbox},
+            
+            "minify.js.enable"                            =>    {:checked   =>  minify_js,            :type   =>  :checkbox},
+            "minify.css.enable"                           =>    {:checked   =>  minify_css,           :type   =>  :checkbox},
           }
         
           return set_options_and_submit(url, form_identifier, options, button_identifier)
