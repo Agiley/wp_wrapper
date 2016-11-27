@@ -17,35 +17,35 @@ module WpWrapper
         
           url                       =   "admin.php?page=w3tc_general"
           form_identifier           =   {:id => 'w3tc_form'}
-          button_identifier         =   {:name => 'w3tc_save_options'}
+          button_identifier         =   {:name => 'w3tc_default_save_and_flush'}
         
           varnish_server            =   options.fetch(:varnish_server, "localhost")
         
           cache_sections.each do |cache_section|
             section_options         =   {
-              "#{cache_section}cache.enabled"    =>    {:checked   =>  true,               :type   =>  :checkbox}, 
-              "#{cache_section}cache.engine"     =>    {:value     =>  caching_mechanism,  :type   =>  :select}
+              "#{cache_section}cache__enabled"    =>    {:checked   =>  true,               :type   =>  :checkbox}, 
+              "#{cache_section}cache__engine"     =>    {:value     =>  caching_mechanism,  :type   =>  :select}
             }
           
             caching_options.merge!(section_options)
           end
         
           minify_options            =   {
-            "minify.enabled"    =>    {:checked   =>  true,               :type   =>  :checkbox}, 
-            "minify.engine"     =>    {:value     =>  caching_mechanism,  :type   =>  :select},
+            "minify__enabled"    =>    {:checked   =>  true,               :type   =>  :checkbox}, 
+            "minify__engine"     =>    {:value     =>  caching_mechanism,  :type   =>  :select},
           }
         
           caching_options.merge!(minify_options)
         
           browser_cache_options     =   {
-            "browsercache.enabled"          =>    {:checked   =>  true,               :type   =>  :checkbox},
+            "browsercache__enabled"          =>    {:checked   =>  true,               :type   =>  :checkbox},
           }
         
           caching_options.merge!(browser_cache_options)
         
           varnish_options           =   {
-            "varnish.enabled"               =>    {:checked   =>  true,               :type   =>  :checkbox},
-            "varnish.servers"               =>    {:value     =>  varnish_server,     :type   =>  :input}
+            "varnish__enabled"               =>    {:checked   =>  true,               :type   =>  :checkbox},
+            "varnish__servers"               =>    {:value     =>  varnish_server,     :type   =>  :input}
           }
         
           caching_options.merge!(varnish_options)
@@ -56,10 +56,10 @@ module WpWrapper
         def configure_page_cache
           url                       =   "admin.php?page=w3tc_pgcache"
           form_identifier           =   {:action => /admin\.php\?page=w3tc_pgcache/i, :index => 1}
-          button_identifier         =   {:name => 'w3tc_save_options'}
+          button_identifier         =   {:name => 'w3tc_default_save_and_flush'}
         
           options                   =   {
-            "pgcache.cache.feed"            =>    {:checked   =>  true,                 :type   =>  :checkbox},
+            "pgcache__cache__feed"            =>    {:checked   =>  true,                 :type   =>  :checkbox},
           }
         
           return set_options_and_submit(url, form_identifier, options, button_identifier)
@@ -68,23 +68,22 @@ module WpWrapper
         def configure_minification(options = {})
           url                       =   "admin.php?page=w3tc_minify"
           form_identifier           =   {:action => /admin\.php\?page=w3tc_minify/i, :index => 1}
-          button_identifier         =   {:name => 'w3tc_save_options'}
+          button_identifier         =   {:name => 'w3tc_default_save_and_flush'}
           
           minify_html               =   options.fetch(:html, :enable).to_sym.eql?(:enable)
           minify_inline_css         =   options.fetch(:inline_css, :enable).to_sym.eql?(:enable)
           minify_inline_js          =   options.fetch(:inline_js, :enable).to_sym.eql?(:enable)
 
-          minify_js                 =   options.fetch(:js, :enable).to_sym.eql?(:enable)
-          minify_css                =   options.fetch(:css, :enable).to_sym.eql?(:enable)
+          minify_js                 =   options.fetch(:js, :disable).to_sym.eql?(:enable)
+          minify_css                =   options.fetch(:css, :disable).to_sym.eql?(:enable)
         
           options                   =   {
-            "minify.html.enable"                          =>    {:checked   =>  minify_html,          :type   =>  :checkbox},
-            "minify.html.inline.css"                      =>    {:checked   =>  minify_inline_css,    :type   =>  :checkbox},
-            "minify.html.inline.js"                       =>    {:checked   =>  minify_inline_js,     :type   =>  :checkbox},
-            "minify.auto.disable_filename_length_test"    =>    {:checked   =>  true,                 :type   =>  :checkbox},
+            "minify__html__enable"                           =>    {:checked   =>  minify_html,          :type   =>  :checkbox},
+            "minify__html__inline__css"                      =>    {:checked   =>  minify_inline_css,    :type   =>  :checkbox},
+            "minify__html__inline__js"                       =>    {:checked   =>  minify_inline_js,     :type   =>  :checkbox},
             
-            "minify.js.enable"                            =>    {:checked   =>  minify_js,            :type   =>  :checkbox},
-            "minify.css.enable"                           =>    {:checked   =>  minify_css,           :type   =>  :checkbox},
+            "minify__js__enable"                             =>    {:checked   =>  minify_js,            :type   =>  :checkbox},
+            "minify__css__enable"                            =>    {:checked   =>  minify_css,           :type   =>  :checkbox},
           }
         
           return set_options_and_submit(url, form_identifier, options, button_identifier)
@@ -95,7 +94,7 @@ module WpWrapper
         
           url                       =   "admin.php?page=w3tc_browsercache"
           form_identifier           =   {:action => /admin\.php\?page=w3tc_browsercache/i, :index => 1}
-          button_identifier         =   {:name => 'w3tc_save_options'}
+          button_identifier         =   {:name => 'w3tc_default_save_and_flush'}
         
           sections                  =   [
             :cssjs, :html, :other
@@ -103,9 +102,9 @@ module WpWrapper
         
           sections.each do |section|
             section_options         =   {
-              "browsercache.#{section}.expires"           =>    {:checked   =>  true,               :type   =>  :checkbox}, 
-              "browsercache.#{section}.cache.control"     =>    {:checked   =>  true,               :type   =>  :checkbox},
-              "browsercache.#{section}.etag"              =>    {:checked   =>  true,               :type   =>  :checkbox},
+              "browsercache__#{section}__expires"           =>    {:checked   =>  true,               :type   =>  :checkbox}, 
+              "browsercache__#{section}__cache__control"    =>    {:checked   =>  true,               :type   =>  :checkbox},
+              "browsercache__#{section}__etag"              =>    {:checked   =>  true,               :type   =>  :checkbox},
             }
           
             options.merge!(section_options)
