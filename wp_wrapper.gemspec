@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.5") if s.respond_to? :required_rubygems_version=
 
   s.name = 'wp_wrapper'
-  s.version = '0.0.4'
+  s.version = '0.0.5'
 
   s.homepage      =   "http://github.com/Agiley/wp_wrapper"
   s.email         =   "sebastian@agiley.se"
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
  Rakefile
  lib/wp_wrapper.rb
  lib/wp_wrapper/client.rb
+ lib/wp_wrapper/exceptions.rb
  lib/wp_wrapper/modules/api.rb
  lib/wp_wrapper/modules/authorization.rb
  lib/wp_wrapper/modules/options.rb
