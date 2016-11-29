@@ -1,8 +1,10 @@
 module WpWrapper
-  VERSION = "0.0.3"
+  VERSION = "0.0.4"
 
   require File.join(File.dirname(__FILE__), 'wp_wrapper/railtie') if defined?(Rails)
-
+  
+  require File.join(File.dirname(__FILE__), 'wp_wrapper/exceptions')
+  
   require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/authorization')
   require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/setup')
   require File.join(File.dirname(__FILE__), 'wp_wrapper/modules/upgrade')

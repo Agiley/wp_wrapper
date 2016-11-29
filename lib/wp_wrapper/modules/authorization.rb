@@ -27,12 +27,13 @@ module WpWrapper
               
               rescue Exception => e
                 puts "#{Time.now}: Url: #{self.url}. Failed to login. Error Class: #{e.class.name}. Error Message: #{e.message}"
-                login(retries - 1) if (retries > 0)
+                login(retries - 1) if retries > 0
+                raise WpWrapper::FailedLoginException, "Failed to login" if retries <= 0 && self.reraise_exceptions
               end
 
             else
               puts "\n\n#{Time.now}: Url: #{self.url}. Something's broken! Can't find wp-admin login form! Retrying...\n\n"
-              login(retries - 1) if (retries > 0)
+              login(retries - 1) if retries > 0
             end
           end
         end

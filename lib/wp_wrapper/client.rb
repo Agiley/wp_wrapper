@@ -3,19 +3,22 @@ module WpWrapper
     attr_accessor :url, :username, :password
     attr_accessor :environment, :logged_in
     attr_accessor :http_client, :mechanize_client
+    attr_accessor :reraise_exceptions
     
     def initialize(options = {})
       options.symbolize_keys! if options.respond_to?(:symbolize_keys!)
       
-      self.url                =   options.fetch(:url, nil)
-      self.url                =   "#{self.url}/" unless self.url.nil? || self.url =~ /\/$/i
+      self.url                  =   options.fetch(:url, nil)
+      self.url                  =   "#{self.url}/" unless self.url.nil? || self.url =~ /\/$/i
       
-      self.username           =   options.fetch(:username, nil)
-      self.password           =   options.fetch(:password, nil)
-      self.logged_in          =   false
+      self.username             =   options.fetch(:username, nil)
+      self.password             =   options.fetch(:password, nil)
+      self.logged_in            =   false
       
-      self.http_client        =   HttpUtilities::Http::Client.new
-      self.mechanize_client   =   HttpUtilities::Http::Mechanize::Client.new
+      self.http_client          =   HttpUtilities::Http::Client.new
+      self.mechanize_client     =   HttpUtilities::Http::Mechanize::Client.new
+      
+      self.reraise_exceptions   =   options.fetch(:reraise_exceptions, false)
     end
     
     include WpWrapper::Modules::Authorization
