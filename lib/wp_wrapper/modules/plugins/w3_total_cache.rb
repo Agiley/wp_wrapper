@@ -49,6 +49,12 @@ module WpWrapper
           }
         
           caching_options.merge!(varnish_options)
+          
+          fragment_options            =   {
+            "fragmentcache___engine"         =>    {:value     =>  caching_mechanism,  :type   =>  :select},
+          }
+        
+          caching_options.merge!(fragment_options)
         
           return set_options_and_submit(url, form_identifier, caching_options, button_identifier)
         end
