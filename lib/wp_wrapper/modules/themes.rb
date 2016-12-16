@@ -61,7 +61,7 @@ module WpWrapper
           end
         end
         
-        puts "[WpWrapper::Modules::Themes] - #{Time.now}: Found a total of #{theme_links.try(:size)} installed themes."
+        puts "[WpWrapper::Modules::Themes] - #{Time.now}: Found a total of #{theme_links.size} theme activation links. Maybe there's only one theme available?"
         
         return theme_links
       end

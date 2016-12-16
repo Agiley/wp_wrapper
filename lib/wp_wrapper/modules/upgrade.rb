@@ -79,7 +79,7 @@ module WpWrapper
                 puts "Upgrade #{type} url: #{upgrade_url.inspect}"
 
                 if (upgrade_url)
-                  self.mechanize_client.agent.get("#{get_url(:admin)}/#{upgrade_url}")
+                  self.mechanize_client.agent.get("#{get_url(:admin)}#{upgrade_url}")
                   puts "#{Time.now}: Url: #{self.url}. #{type.to_s.capitalize} were upgraded!"
                   success       =   true
                 end

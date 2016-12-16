@@ -35,11 +35,11 @@ module WpWrapper
 
           confirmation_page                                      =   setup_form.submit
 
-          puts "#{Time.now}: Url: #{self.url}. The WordPress-blog has now been installed!"
+          puts "[WpWrapper::Modules::Setup] - #{Time.now}: Url: #{self.url}. The WordPress-blog has now been installed!"
           success                                                =   true
         else
-          puts "#{Time.now}: Url: #{self.url}. The blog has already been setup or the registration form couldn't be found or some data is missing."
-          puts "#{Time.now}: Url: #{self.url}. Information supplied:\nTitle: #{title}.\nUsername: #{self.username}.\nPassword: #{self.password}.\nEmail: #{email}."
+          puts "[WpWrapper::Modules::Setup] - #{Time.now}: Url: #{self.url}. The blog has already been setup or the registration form couldn't be found or some data is missing."
+          puts "[WpWrapper::Modules::Setup] - #{Time.now}: Url: #{self.url}. Information supplied:\nTitle: #{title}.\nUsername: #{self.username}.\nPassword: #{self.password}.\nEmail: #{email}."
         end
         
         return success

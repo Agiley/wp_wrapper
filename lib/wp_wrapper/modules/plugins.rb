@@ -8,45 +8,42 @@ module WpWrapper
       include ::WpWrapper::Modules::Plugins::TrackingCode
       
       def manage_plugins(plugin_identifiers, action = :activate)
-        plugin_identifiers        =   (plugin_identifiers.is_a?(Array)) ? plugin_identifiers : [plugin_identifiers.to_s]
+        login unless logged_in?
+        
+        plugin_identifiers      =   (plugin_identifiers.is_a?(Array)) ? plugin_identifiers : [plugin_identifiers.to_s]
         
         plugin_identifiers.each do |plugin_identifier|
           manage_plugin(plugin_identifier, action)
-        end
+        end if plugin_identifiers && plugin_identifiers.any?
       end
       
       def manage_plugin(plugin_identifier, action = :activate)
-        success                   =   false
-      
-        if (login)
-          activation_link         =   nil
-          plugins_page            =   self.mechanize_client.open_url(get_url(:plugins))
+        success                 =   false
 
-          if (plugins_page)
-            plugin_links          =   plugins_page.parser.css("table.plugins tbody tr td span.#{action} a")
-            regex                 =   Regexp.new("plugin=#{plugin_identifier}", Regexp::IGNORECASE)
-        
-            plugin_links.each do |link|
-              href                =   link["href"]
+        activation_link         =   nil
+        plugins_page            =   self.mechanize_client.open_url(get_url(:plugins))
+
+        if plugins_page
+          plugin_links          =   plugins_page.parser.css("table.plugins tbody tr td span.#{action} a")
+          regex                 =   Regexp.new("plugin=#{plugin_identifier}", Regexp::IGNORECASE)
           
-              if (regex.match(href))
-                activation_link   =   href
-                break
-              end
-            end if (plugin_links && plugin_links.any?)
-            
-            if (activation_link && activation_link.present?)
-              url                 =   "#{get_url(:admin)}/#{activation_link}"
-              self.mechanize_client.open_url(url)
-              puts "#{Time.now}: Url: #{self.url}. Plugin '#{plugin_identifier}' has been #{action}d!"
-              success             =   true
-            else
-              puts "#{Time.now}: Url: #{self.url}. Couldn't find the plugin #{plugin_identifier}'s #{action}-link."
+          plugin_links.each do |link|
+            href                =   link["href"]
+        
+            if regex.match(href)
+              activation_link   =   href
+              break
             end
-            
+          end if plugin_links && plugin_links.any?
+          
+          if activation_link && activation_link.present?
+            url                 =   "#{get_url(:admin)}#{activation_link}"
+            self.mechanize_client.open_url(url)
+            puts "[WpWrapper::Modules::Plugins] - #{Time.now}: Url: #{self.url}. Plugin '#{plugin_identifier}' has been #{action}d!"
+            success             =   true
+          else
+            puts "[WpWrapper::Modules::Plugins] - #{Time.now}: Url: #{self.url}. Couldn't find the plugin #{plugin_identifier}'s #{action}-link."
           end
-        else
-          puts "#{Time.now}: Failed to login for url #{self.url}, will not proceed to #{action} plugins"
         end
 
         return success
