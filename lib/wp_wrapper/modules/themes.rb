@@ -4,9 +4,9 @@ module WpWrapper
       
       def activate_random_theme(ignore_themes: [])
         theme_links               =   get_theme_links(ignore_themes: ignore_themes)
-        random_link               =   (theme_links && theme_links.any?) ? theme_links.to_a.sample : nil
+        random_url                =   (theme_links && theme_links.any?) ? theme_links.sample : nil
 
-        perform_activation(random_link["href"]) if random_link
+        perform_activation(random_url) if random_url
       end
     
       def activate_theme(theme_identifier = 'twentytwelve')
@@ -57,22 +57,22 @@ module WpWrapper
           themes_page       =   self.mechanize_client.open_url(get_url(:themes))
           links             =   themes_page ? themes_page.parser.css("div.themes div.theme div.theme-actions a.activate") : []
           
-          if ignore_themes && ignore_themes.any?
-            links.each do |link|
-              href          =   link["href"]
+          links.each do |link|
+            href            =   link["href"]
             
+            if ignore_themes && ignore_themes.any?
               ignore_themes.each do |ignore_theme|
-                regex       =   Regexp.new("stylesheet=#{ignore_theme}", Regexp::IGNORECASE)
-            
+                regex       =   ignore_theme.is_a?(Regexp) ? ignore_theme : Regexp.new("stylesheet=#{ignore_theme}", Regexp::IGNORECASE)
+          
                 if !regex.match(href)
                   theme_links << href
                   break
                 end
               end
-            end if links && links.any?
-          else
-            theme_links     =   links
-          end
+            else
+              theme_links << href
+            end
+          end if links && links.any?
         end
         
         puts "[WpWrapper::Modules::Themes] - #{Time.now}: Found a total of #{theme_links.size} theme activation links."
