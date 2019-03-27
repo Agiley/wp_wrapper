@@ -11,8 +11,8 @@ Gem::Specification.new do |s|
   s.description   =   "Wrapper to interact with WordPress using Mechanize"
   s.summary       =   "Wrapper to interact with WordPress using Mechanize"
 
-  s.add_dependency "nokogiri", ">= 1.5.9"
-  s.add_dependency "http_utilities", ">= 1.0.1"
+  s.add_dependency "nokogiri", ">= 1.10.2"
+  s.add_dependency "http_utilities", ">= 1.4.2"
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
