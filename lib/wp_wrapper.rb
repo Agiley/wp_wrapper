@@ -1,5 +1,5 @@
 module WpWrapper
-  VERSION = "0.0.6"
+  VERSION = "0.0.7"
 
   require File.join(File.dirname(__FILE__), 'wp_wrapper/railtie') if defined?(Rails)
   

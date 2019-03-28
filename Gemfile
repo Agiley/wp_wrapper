@@ -1,12 +1,6 @@
-source "http://rubygems.org"
+source "https://rubygems.org"
 
-gem 'nokogiri', ">= 1.5.9"
-gem 'http_utilities', ">= 1.0.1"
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-group :development, :test do
-  gem 'rspec'
-  gem "mocha"
-end
-
+# Specify your gem's dependencies in financy-scrapers.gemspec
 gemspec
-
