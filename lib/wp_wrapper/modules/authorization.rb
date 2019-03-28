@@ -2,10 +2,10 @@ module WpWrapper
   module Modules
     module Authorization
     
-      def login(retries = 3)
-        success                 =   logged_in?
+      def login(force: false, retries: 3)
+        success                 =   force ? false : logged_in?
       
-        if !logged_in?
+        if !success
           login_page            =   self.mechanize_client.open_url(get_url(:admin))
           agent                 =   self.mechanize_client.agent
 
@@ -29,17 +29,19 @@ module WpWrapper
               
               rescue Exception => e
                 puts "[WpWrapper::Modules::Authorization] - #{Time.now}: Url: #{self.url}. Failed to login. Error Class: #{e.class.name}. Error Message: #{e.message}"
-                login(retries - 1) if retries > 0
+                login(force: force, retries: retries - 1) if retries > 0
                 raise WpWrapper::FailedLoginException, "Failed to login" if retries <= 0 && self.reraise_exceptions
               end
 
             else
               puts "[WpWrapper::Modules::Authorization] - #{Time.now}: Url: #{self.url}. Something's broken! Can't find wp-admin login form! Retrying...\n\n"
-              login(retries - 1) if retries > 0
+              login(force: force, retries: retries - 1) if retries > 0
               raise WpWrapper::FailedLoginException, "Failed to login" if retries <= 0 && self.reraise_exceptions
             end
           end
         end
+        
+        success         =   !(retries <= 0)
       
         return success
       end

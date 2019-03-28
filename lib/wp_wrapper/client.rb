@@ -57,7 +57,6 @@ module WpWrapper
     
     def set_options_and_submit(url, form_identifier = {}, fields = {}, submit_identifier = :first, options = {})
       login unless logged_in?
-      
       form_page_url   =   "#{get_url(:admin)}#{url}"
       response        =   self.mechanize_client.set_form_and_submit(form_page_url, form_identifier, submit_identifier, fields, options)
     end

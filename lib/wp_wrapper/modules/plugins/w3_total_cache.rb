@@ -12,6 +12,8 @@ module WpWrapper
         end
       
         def configure_general_settings(caching_mechanism, options = {})
+          login unless logged_in?
+          
           caching_options           =   {}
           cache_sections            =   [:pg, :db, :object]
         
@@ -60,6 +62,8 @@ module WpWrapper
         end
       
         def configure_page_cache
+          login unless logged_in?
+          
           url                       =   "admin.php?page=w3tc_pgcache"
           form_identifier           =   {:action => /admin\.php\?page=w3tc_pgcache/i, :index => 1}
           button_identifier         =   {:name => 'w3tc_default_save_and_flush'}
@@ -72,6 +76,8 @@ module WpWrapper
         end
       
         def configure_minification(options = {})
+          login unless logged_in?
+          
           url                       =   "admin.php?page=w3tc_minify"
           form_identifier           =   {:action => /admin\.php\?page=w3tc_minify/i, :index => 1}
           button_identifier         =   {:name => 'w3tc_default_save_and_flush'}
@@ -96,6 +102,8 @@ module WpWrapper
         end
       
         def configure_browser_cache
+          login unless logged_in?
+          
           options                   =   {}
         
           url                       =   "admin.php?page=w3tc_browsercache"
@@ -120,6 +128,8 @@ module WpWrapper
         end
       
         def activate_configuration
+          login unless logged_in?
+          
           url         =   "#{get_url(:admin)}admin.php?page=w3tc_general"
           page        =   self.mechanize_client.get_page(url)
           

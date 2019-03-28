@@ -12,7 +12,7 @@ module WpWrapper
           
           enable_wordpress_seo_settings_page
           configure_wordpress_seo_titles(language)
-          configure_wordpress_seo_advanced_options
+          #configure_wordpress_seo_advanced_options
         end
         
         def enable_wordpress_seo_settings_page
@@ -33,6 +33,7 @@ module WpWrapper
           login unless logged_in?
         
           options   =   get_title_options(language)
+          options.merge!(get_media_options)
           options.merge!(get_taxonomy_options)
           options.merge!(get_archive_options)
           options.merge!(get_other_options)
@@ -44,12 +45,14 @@ module WpWrapper
           response  =   submit_wordpress_seo_form(form, options)
         end
         
+        # Deprecated?
         def configure_wordpress_seo_advanced_options
           login unless logged_in?
         
           configure_wordpress_seo_permalinks
         end
         
+        # Deprecated?
         def configure_wordpress_seo_permalinks
           url       =   "#{get_url(:admin)}admin.php?page=wpseo_advanced&tab=permalinks"
           page      =   self.mechanize_client.get_page(url)
@@ -63,6 +66,7 @@ module WpWrapper
           response    =   submit_wordpress_seo_form(form, options)
         end
         
+        # Deprecated?
         def configure_wordpress_seo_sitemaps(not_included_post_types: [:attachment], not_included_taxonomies: [:category, :post_tag, :post_format], disable_author_sitemap: true)
           login unless logged_in?
           
@@ -156,6 +160,14 @@ module WpWrapper
           
               options.merge!(type_options)
             end
+          
+            return options
+          end
+          
+          def get_media_options
+            options                 =   {
+              "wpseo_titles[disable-attachment]"      =>  {:type   =>  :checkbox,   :checked   =>  true},
+            }
           
             return options
           end
